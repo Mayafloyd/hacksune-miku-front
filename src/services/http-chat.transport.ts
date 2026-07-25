@@ -158,6 +158,12 @@ export class HttpChatTransport implements ChatTransport {
     if (contentType.includes("application/json")) {
       const payload: unknown = await response.json();
       if (isAgentResponse(payload)) {
+        yield {
+          type: "start",
+          responseId: payload.id,
+          agent: payload.agent,
+          status: payload.agent === "sales" ? "consulting" : "thinking",
+        };
         yield { type: "done", response: payload };
       } else if (isAgentStreamEvent(payload)) {
         yield payload;

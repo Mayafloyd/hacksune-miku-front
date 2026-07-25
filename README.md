@@ -5,10 +5,10 @@ Prototipo web de una experiencia conversacional con dos recorridos:
 - **Ventas:** descubrimiento, recomendación y comparación de electrodomésticos.
 - **Soporte:** diagnóstico guiado, seguridad, garantía y solicitud de servicio.
 
-“HACEB Asistente” es un nombre provisional y no debe interpretarse como una
-denominación oficial. En modo mock la aplicación usa datos demostrativos; con
-Jota habilitado, ventas consulta precios, inventario, imágenes y referencias
-desde el catálogo VTEX de Haceb.
+“HACEB Asistente” es un nombre provisional. El repositorio es un monolito:
+FastAPI sirve la interfaz compilada, Jota atiende ventas y Mara atiende soporte
+técnico. Ambos agentes consultan fuentes oficiales de Haceb mediante sus
+herramientas.
 
 ## Estado y alcance
 
@@ -19,20 +19,16 @@ El proyecto implementa:
 - historial, contexto y comparación adaptados como paneles en pantallas
   pequeñas;
 - conversaciones separadas en memoria para cada agente;
-- respuestas estructuradas mediante un contrato compartido (mock local o API
-  real de Jota);
+- respuestas estructuradas mediante un contrato compartido para Jota y Mara;
 - bloques enriquecidos para productos, comparaciones, diagnósticos, alertas de
   seguridad, garantías, formularios, citas y transferencia a una persona;
-- historial, catálogo y casos técnicos de demostración para soporte;
+- catálogo oficial para ventas y manuales/fichas oficiales para soporte;
 - descarga de un resumen en texto y uso de la API nativa de compartir cuando
   está disponible;
 - validación local de adjuntos JPG, PNG, WEBP y PDF de hasta 10 MB.
 
-La ruta de ventas puede consumirse desde el agente Jota en
-`/home/camilosanchez/Documentos/hacksune_miku/hacksune-miku/Jota`. La conexión
-real requiere configurar las credenciales del agente y del catálogo en su
-backend; soporte, CRM, garantías, agenda y carga real de archivos siguen siendo
-preparaciones o demostraciones.
+El runtime no depende del repositorio original de los agentes. Sus fuentes
+viven dentro de `backend/agents/jota` y `backend/agents/mara`.
 
 ## Rutas
 
@@ -72,29 +68,23 @@ con CSS propio y variables de diseño.
 
 ## Requisitos e instalación
 
-Se necesita Node.js 22.12 o posterior y npm.
+Se necesita Node.js 22.12 o posterior, npm y Python 3.11 o posterior.
 
 ```bash
 npm install
+python3 -m pip install -r requirements.txt
 cp .env.example .env
-npm run dev
+npm run monolith
 ```
 
-Para conectar Jota en desarrollo, inicia primero su API (`uvicorn api:app
---reload --port 8000` desde la carpeta `Jota`) y cambia el `.env` del frontend:
+El comando compila Astro e inicia FastAPI. La aplicación completa queda en:
 
-```dotenv
-PUBLIC_AGENT_API_URL=http://localhost:8000
-PUBLIC_USE_MOCK_AGENTS=false
+```text
+http://localhost:8000
 ```
 
-Jota expone `POST /api/chat` y mantiene `/chat` como alias compatible. El
-request usa `agent`, `sessionId`, `message`, `productContext` y `attachments`;
-la respuesta devuelve `id`, `sessionId`, `createdAt` y bloques `text` y
-`product-list`. Los productos incluyen precio/disponibilidad del catálogo VTEX
-de Haceb, imagen, referencia, categoría y URL de origen. Configura
-`CORS_ORIGINS=http://localhost:4321` en `Jota/.env` si el frontend corre en el
-puerto por defecto.
+Las credenciales privadas se leen de `.env.backend`, que está ignorado por Git.
+La interfaz usa `/api/chat` en el mismo origen, por lo que no necesita CORS.
 
 Con un `package-lock.json` ya verificado, `npm ci` es una alternativa
 reproducible para integración continua.
@@ -114,6 +104,8 @@ npm run dev -- --host
 | `npm run check` | Ejecuta el diagnóstico de Astro y TypeScript |
 | `npm run build` | Ejecuta `astro check` y genera el sitio en `dist/` |
 | `npm run preview` | Sirve localmente el último contenido de `dist/` |
+| `npm run start` | Inicia FastAPI y sirve `dist/`, Jota y Mara |
+| `npm run monolith` | Compila el frontend e inicia el monolito completo |
 
 No hay scripts de pruebas unitarias, pruebas end-to-end, lint o formato
 configurados en este prototipo.
@@ -121,20 +113,13 @@ configurados en este prototipo.
 ## Arquitectura
 
 ```text
-Páginas y layouts Astro
-        │
-        ├── contenido estático y navegación
-        │
-        └── islas React
-              │
-              └── ChatWorkspace
-                    │
-                    └── AgentService
-                          │
-                          ├── MockChatTransport (activo)
-                          └── HttpChatTransport (preparado)
-                                  │
-                                  └── POST /api/chat
+Navegador
+   │
+   └── FastAPI :8000
+         ├── / y /assistant/* → dist/ de Astro
+         └── POST /api/chat
+               ├── agent=sales   → Jota → catálogo VTEX Haceb
+               └── agent=support → Mara → fichas y manuales Haceb
 ```
 
 ### Renderizado e hidratación
@@ -179,10 +164,9 @@ fixtures directamente.
 `ChatTransport`. Esto permite cambiar el origen de respuestas sin modificar el
 modelo de eventos ni los componentes visuales:
 
-- `MockChatTransport`: activo por defecto; genera eventos progresivos y bloques
-  a partir de palabras clave.
-- `HttpChatTransport`: preparado para `POST /api/chat`; acepta SSE, NDJSON o
-  JSON.
+- `HttpChatTransport`: activo por defecto y consume `POST /api/chat` en el
+  mismo origen.
+- `MockChatTransport`: se conserva para desarrollo visual aislado.
 - un transporte propio puede implementar la misma interfaz con
   `kind: "custom"`.
 
@@ -306,29 +290,17 @@ Otros estados útiles:
 - Desactivar la red desde el navegador activa el estado offline y deshabilita
   el composer. Esto no equivale a persistencia durable.
 
-## Cambiar del mock a `POST /api/chat`
+## Contrato `POST /api/chat`
 
 ### Activación por entorno
 
-`src/services/agent.service.ts` ya selecciona el transporte a partir de
-`.env`. No hace falta cambiar `ChatWorkspace` ni los componentes de mensajes.
-
-Este repositorio no implementa `/api/chat`: la compilación es estática. El
-despliegue debe proporcionar ese endpoint mediante un backend, una función o un
-proxy del mismo origen. Si vive en otro origen, también debe configurarse CORS.
-
-Con esa convención, `PUBLIC_AGENT_API_URL` representa el origen o URL base, sin
-`/api/chat`:
+`backend/app.py` implementa el endpoint y selecciona el agente a partir de
+`agent`. La interfaz lo consume en el mismo origen:
 
 ```dotenv
 PUBLIC_USE_MOCK_AGENTS=false
-PUBLIC_AGENT_API_URL=https://backend.ejemplo.com
+PUBLIC_AGENT_API_URL=
 ```
-
-Para un proxy del mismo origen, dejar `PUBLIC_AGENT_API_URL` vacío produce
-`/api/chat`. En una compilación estática las variables públicas se resuelven al
-compilar; hay que reiniciar el servidor de desarrollo o reconstruir `dist/`
-después de cambiarlas.
 
 ### Solicitud
 
@@ -428,8 +400,8 @@ marcador textual `[DONE]` se ignora y no reemplaza el evento tipado `done`.
 
 | Variable | Ejemplo | Estado actual |
 | --- | --- | --- |
-| `PUBLIC_AGENT_API_URL` | `https://backend.ejemplo.com` | Declarada en `.env.example`, aún no consumida |
-| `PUBLIC_USE_MOCK_AGENTS` | `true` o `false` | Declarada en `.env.example`, aún no consumida |
+| `PUBLIC_AGENT_API_URL` | vacío | Usa `/api/chat` en el mismo origen |
+| `PUBLIC_USE_MOCK_AGENTS` | `false` | Activa Jota y Mara reales |
 
 El prefijo `PUBLIC_` hace que el valor pueda incorporarse al JavaScript del
 navegador. Nunca se deben guardar allí tokens privados, claves de API ni
