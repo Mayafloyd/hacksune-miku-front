@@ -54,7 +54,9 @@ export function ProductCard({
     <article className={`product-card ${compact ? 'product-card--compact' : ''}`}>
       <div className="product-card__visual">
         <img src={product.image.src} alt={product.image.alt} width="520" height="420" loading="lazy" />
-        <span className="dev-label">Datos demo</span>
+        <span className="dev-label">
+          {product.demo ? 'Datos demo' : 'Catálogo oficial Haceb'}
+        </span>
         <button
           className={`product-card__save ${saved ? 'is-saved' : ''}`}
           type="button"
@@ -101,7 +103,7 @@ export function ProductCard({
           <Badge>{product.energyRating}</Badge>
         </div>
 
-        <div className="product-card__colors" aria-label="Colores de demostración disponibles">
+        <div className="product-card__colors" aria-label="Colores disponibles">
           {product.colors.map((color) => (
             <span key={color.name} title={color.name}>
               <i style={{ background: color.hex ?? 'var(--brand-border)' }} aria-hidden="true" />

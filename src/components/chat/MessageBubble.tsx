@@ -98,7 +98,11 @@ function RichBlock({
         {recommendation && (
           <RecommendationCard
             product={recommendation}
-            reason="Es el mejor punto de partida dentro de este catálogo demostrativo; aún debemos confirmar espacio, prioridades y datos oficiales."
+            reason={
+              recommendation.demo
+                ? 'Es el mejor punto de partida dentro de este catálogo demostrativo; aún debemos confirmar espacio, prioridades y datos oficiales.'
+                : 'Es el mejor punto de partida según los productos disponibles en el catálogo oficial de Haceb.'
+            }
             onInterested={(product) => onIntent?.('sales.interested', `Me interesa ${product.name}`)}
           />
         )}
