@@ -17,6 +17,7 @@ import type { Product } from '../../types/product';
 import type { ServiceAppointment } from '../../types/support';
 import { Button } from '../common/Button';
 import { EmptyState } from '../common/EmptyState';
+import { MarkdownContent } from './MarkdownContent';
 import { ProductCarousel } from '../sales/ProductCarousel';
 import { ProductComparison } from '../sales/ProductComparison';
 import { RecommendationCard } from '../sales/RecommendationCard';
@@ -64,7 +65,7 @@ function RichBlock({
 
   if (block.type === 'text') {
     if (block.text.trim() === messageContent.trim()) return null;
-    return <p className="message-block-text">{block.text}</p>;
+    return <MarkdownContent className="message-block-text" content={block.text} />;
   }
 
   if (block.type === 'product-list') {
@@ -232,7 +233,11 @@ export function MessageBubble({
           {message.deliveryStatus === 'streaming' && <span>Escribiendo…</span>}
         </header>
         <div className="chat-message__bubble">
-          <p className="chat-message__content">{message.content}</p>
+          {isUser ? (
+            <p className="chat-message__content">{message.content}</p>
+          ) : (
+            <MarkdownContent className="chat-message__content" content={message.content} />
+          )}
           {message.attachments && message.attachments.length > 0 && (
             <div className="message-attachments">
               {message.attachments.map((attachment) => (
