@@ -143,7 +143,20 @@ export const createAgentService = (
 
 /**
  * Desarrollo local: usa fixtures demostrativos.
- * Producción: crear con `createAgentService({ mode: "http" })`.
+ * Producción: `PUBLIC_USE_MOCK_AGENTS=false` activa el transporte HTTP.
  */
-export const agentService = createAgentService({ mode: "mock" });
+const useMockAgents =
+  import.meta.env.PUBLIC_USE_MOCK_AGENTS !== "false";
+const configuredApiBase =
+  import.meta.env.PUBLIC_AGENT_API_URL?.trim().replace(/\/+$/, "") ??
+  "";
+const configuredEndpoint = configuredApiBase
+  ? `${configuredApiBase}/api/chat`
+  : CHAT_API_ENDPOINT;
 
+export const agentService = useMockAgents
+  ? createAgentService({ mode: "mock" })
+  : createAgentService({
+      mode: "http",
+      http: { endpoint: configuredEndpoint },
+    });

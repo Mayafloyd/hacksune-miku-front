@@ -970,6 +970,12 @@ body.is-dialog-open {
   font-size: 0.62rem;
 }
 
+.message-loading-preview {
+  width: min(100%, 24rem);
+  margin-left: 2.65rem;
+  opacity: 0.75;
+}
+
 @keyframes typing-dot {
   50% {
     opacity: 0.25;

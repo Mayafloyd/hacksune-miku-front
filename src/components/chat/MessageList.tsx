@@ -4,6 +4,7 @@ import type { AgentType } from '../../types/agent';
 import type { ChatMessage } from '../../types/chat';
 import type { Product } from '../../types/product';
 import { Button } from '../common/Button';
+import { Skeleton } from '../common/Skeleton';
 import { MessageBubble } from './MessageBubble';
 import { TypingIndicator } from './TypingIndicator';
 
@@ -93,7 +94,12 @@ export function MessageList({
           />
         ))}
         {isLoading && !messages.some((message) => message.deliveryStatus === 'streaming') && (
-          <TypingIndicator agent={agent} />
+          <>
+            <TypingIndicator agent={agent} />
+            <div className="message-loading-preview" aria-hidden="true">
+              <Skeleton lines={3} variant={agent === 'sales' ? 'product' : 'card'} />
+            </div>
+          </>
         )}
         <div ref={endRef} aria-hidden="true" />
       </div>

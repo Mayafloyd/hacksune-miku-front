@@ -42,8 +42,9 @@ o preparatorios.
 | `/assistant/support?topic=help` | Muestra una orientación inicial |
 
 Los accesos rápidos de la portada también agregan parámetros `?action=...`.
-Actualmente conducen al agente correcto, pero `ChatWorkspace` todavía no
-interpreta esos parámetros para enviar o precargar una intención.
+`ChatWorkspace` interpreta `compare`, `warranty`, `schedule`, `parts` y
+`request-status`, limpia el parámetro de la URL y ejecuta la intención en el
+agente correspondiente.
 
 ## Stack y versiones principales
 
@@ -131,16 +132,18 @@ La fuente de verdad de la interfaz activa está hoy dentro de
 `ChatWorkspace.tsx` mediante estado de React:
 
 - mantiene un hilo independiente para `sales` y otro para `support`;
-- conserva ambos hilos mientras la isla siga montada;
+- conserva hilos, borradores, carga y controladores independientes mientras la
+  isla siga montada;
 - administra estado del agente, comparación, conectividad, modales, paneles y
   notificaciones;
-- cancela la respuesta en curso mediante `AbortController` al desmontar o crear
-  una conversación nueva.
+- incorpora las conversaciones creadas durante la sesión al historial en
+  memoria;
+- cancela solo la respuesta del agente afectado mediante su propio
+  `AbortController`.
 
 El contenido creado durante la sesión no usa `localStorage`, IndexedDB ni un
-backend. Se pierde al recargar la página. El historial que aparece en la barra
-lateral proviene de fixtures y no incorpora permanentemente las conversaciones
-nuevas.
+backend. El historial combina fixtures y conversaciones nuevas en memoria, pero
+se pierde al recargar la página.
 
 `src/stores/` contiene stores tipados y compatibles con
 `useSyncExternalStore`, pero la interfaz actual todavía no los consume. De igual
@@ -164,9 +167,9 @@ modelo de eventos ni los componentes visuales:
 ### Responsive
 
 - Más de `79.99rem`: barra lateral, conversación y contexto visibles.
-- Hasta `79.99rem`: el contexto deja la grilla y se abre como panel.
-- Hasta `52rem`: se muestra solo el chat; historial y contexto se abren como
-  `Sheet`.
+- Hasta `79.99rem`: el contexto deja la grilla y se abre como drawer lateral.
+- Hasta `52rem`: se muestra solo el chat; el historial abre lateralmente y el
+  contexto como bottom sheet.
 - Hasta `35rem`: se compactan mensajes, acciones rápidas, tarjetas y
   comparaciones.
 
@@ -238,9 +241,10 @@ estado de demostración. Antes de publicar se deben reemplazar los repositorios
 mock y validar todo dato con fuentes oficiales.
 
 Los adjuntos seleccionados no se suben ni incluyen sus bytes en la solicitud.
-Solo se construye metadato (`nombre`, tipo MIME, tamaño y estado). Una
-integración real necesita un flujo de carga previo, URLs firmadas o un cambio
-explícito a `multipart/form-data`.
+La interfaz crea previsualizaciones locales para imágenes, simula el progreso y
+construye metadato (`nombre`, tipo MIME, tamaño y estado). Una integración real
+necesita un flujo de carga previo, URLs firmadas o un cambio explícito a
+`multipart/form-data`.
 
 ## Cómo probar los estados demo
 
@@ -282,45 +286,14 @@ Otros estados útiles:
 
 ## Cambiar del mock a `POST /api/chat`
 
-### Opción mínima: endpoint fijo
+### Activación por entorno
 
-En `src/services/agent.service.ts`, sustituir la exportación final:
-
-```ts
-export const agentService = createAgentService({
-  mode: "http",
-  http: { endpoint: "/api/chat" },
-});
-```
-
-No hace falta cambiar `ChatWorkspace` ni los componentes de mensajes.
+`src/services/agent.service.ts` ya selecciona el transporte a partir de
+`.env`. No hace falta cambiar `ChatWorkspace` ni los componentes de mensajes.
 
 Este repositorio no implementa `/api/chat`: la compilación es estática. El
 despliegue debe proporcionar ese endpoint mediante un backend, una función o un
 proxy del mismo origen. Si vive en otro origen, también debe configurarse CORS.
-
-### Opción recomendada: selector por entorno
-
-`.env.example` ya declara las variables, pero **el código actual todavía no las
-lee**. Para activarlas, la exportación de `agentService` puede quedar así:
-
-```ts
-const useMockAgents =
-  import.meta.env.PUBLIC_USE_MOCK_AGENTS !== "false";
-const apiBase = import.meta.env.PUBLIC_AGENT_API_URL
-  ?.trim()
-  .replace(/\/+$/, "");
-const endpoint = apiBase
-  ? `${apiBase}/api/chat`
-  : CHAT_API_ENDPOINT;
-
-export const agentService = useMockAgents
-  ? createAgentService({ mode: "mock" })
-  : createAgentService({
-      mode: "http",
-      http: { endpoint },
-    });
-```
 
 Con esa convención, `PUBLIC_AGENT_API_URL` representa el origen o URL base, sin
 `/api/chat`:
