@@ -286,8 +286,21 @@ class AgenteVentas:
             if not response.has_tool_calls and not response.text:
                 return response.text or "(Sin respuesta de texto)"
 
-            # Agregar respuesta del modelo al historial
-            self.historial.append({"role": "model", "text": response.text or ""})
+            # Conservar también las llamadas de herramientas. El proveedor
+            # OpenAI-compatible necesita verlas en el mensaje assistant que
+            # precede a cada mensaje role=tool.
+            self.historial.append({
+                "role": "model",
+                "text": response.text or "",
+                "tool_calls": [
+                    {
+                        "id": tc.id,
+                        "name": tc.name,
+                        "arguments": tc.arguments,
+                    }
+                    for tc in response.tool_calls
+                ],
+            })
 
             if not response.has_tool_calls:
                 # Solo texto → respuesta final

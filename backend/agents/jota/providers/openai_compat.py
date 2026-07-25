@@ -53,8 +53,29 @@ def _history_to_openai(normalized: list[dict]) -> list[dict]:
             messages.append({"role": "user", "content": msg["text"]})
 
         elif role == "model":
-            # Solo texto (sin tool_calls en el historial normalizado)
-            messages.append({"role": "assistant", "content": msg.get("text", "")})
+            # Una respuesta que solicita herramientas debe conservar el
+            # contrato completo de OpenAI: el mensaje assistant incluye los
+            # tool_calls y cada resultado posterior referencia su id.
+            assistant_message: dict = {
+                "role": "assistant",
+                "content": msg.get("text") or None,
+            }
+            if msg.get("tool_calls"):
+                assistant_message["tool_calls"] = [
+                    {
+                        "id": call["id"],
+                        "type": "function",
+                        "function": {
+                            "name": call["name"],
+                            "arguments": json.dumps(
+                                call.get("arguments", {}),
+                                ensure_ascii=False,
+                            ),
+                        },
+                    }
+                    for call in msg["tool_calls"]
+                ]
+            messages.append(assistant_message)
 
         elif role == "tool_response":
             for r in msg["tool_results"]:

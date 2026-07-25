@@ -8,15 +8,35 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 FRONTEND_DIST = PROJECT_ROOT / "dist"
 
-load_dotenv(PROJECT_ROOT / ".env")
-load_dotenv(PROJECT_ROOT / ".env.backend", override=False)
+
+def _load_backend_environment() -> None:
+    """Carga la configuración del backend con fallback al .env del frontend.
+
+    Las variables ya definidas por el proceso tienen prioridad. Después se
+    toma `.env.backend` y, para cualquier clave ausente o vacía, `.env`.
+    Así el monolito funciona aunque el usuario solo haya configurado el
+    archivo `.env`.
+    """
+    backend_values = dotenv_values(PROJECT_ROOT / ".env.backend")
+    frontend_values = dotenv_values(PROJECT_ROOT / ".env")
+    keys = set(backend_values) | set(frontend_values)
+
+    for key in keys:
+        if not key or os.getenv(key):
+            continue
+        value = backend_values.get(key) or frontend_values.get(key)
+        if value is not None:
+            os.environ[key] = value
+
+
+_load_backend_environment()
 
 from .agents import AgenteSoporte, AgenteVentas
 from .contracts import (
