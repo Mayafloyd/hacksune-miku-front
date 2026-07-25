@@ -72,10 +72,13 @@ con CSS propio y variables de diseño.
 Se necesita Node.js 22.12 o posterior y npm.
 
 ```bash
-npm ci
+npm install
 cp .env.example .env
 npm run dev
 ```
+
+Con un `package-lock.json` ya verificado, `npm ci` es una alternativa
+reproducible para integración continua.
 
 Astro mostrará la URL local; por defecto suele ser
 `http://localhost:4321`. Para exponer el servidor en la red local:

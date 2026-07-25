@@ -3,6 +3,14 @@
 @import './tokens.css';
 @import './assistant.css';
 
+@theme inline {
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-graphite: var(--brand-graphite);
+  --color-brand-surface: var(--brand-surface);
+  --font-brand: var(--font-sans);
+  --radius-brand-card: var(--radius-xl);
+}
+
 *,
 *::before,
 *::after {

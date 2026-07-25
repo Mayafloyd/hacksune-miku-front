@@ -230,11 +230,26 @@ export default function ChatWorkspace({ initialAgent }: ChatWorkspaceProps) {
         attachments,
         deliveryStatus: 'sent',
       };
+      const salesHistory = `${threads.sales.map((item) => item.content).join(' ')} ${message}`
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLocaleLowerCase('es-CO');
+      const detectedCategory: Product['category'] | undefined = salesHistory.includes('nevera')
+        ? 'refrigerator'
+        : salesHistory.includes('lavadora')
+          ? 'washer'
+          : salesHistory.includes('estufa')
+            ? 'stove'
+            : salesHistory.includes('calentador')
+              ? 'water-heater'
+              : salesHistory.includes('aire')
+                ? 'air-conditioner'
+                : undefined;
       const request: ChatRequest = {
         agent: targetAgent,
         sessionId: conversationId,
         message,
-        productContext: {},
+        productContext: detectedCategory ? { category: detectedCategory } : {},
         attachments,
       };
 
@@ -509,11 +524,17 @@ export default function ChatWorkspace({ initialAgent }: ChatWorkspaceProps) {
       URL.revokeObjectURL(url);
       showToast('Resumen descargado.');
     } else if (action === 'share') {
-      if (navigator.share) {
-        await navigator.share({ title: 'Resumen de conversación HACEB', text: summary });
-      } else {
-        await navigator.clipboard.writeText(summary);
-        showToast('Resumen copiado para compartir.');
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'Resumen de conversación HACEB', text: summary });
+        } else {
+          await navigator.clipboard.writeText(summary);
+          showToast('Resumen copiado para compartir.');
+        }
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          showToast('No pudimos compartir el resumen en este momento.', 'warning');
+        }
       }
     }
   };

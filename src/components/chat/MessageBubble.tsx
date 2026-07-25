@@ -19,6 +19,7 @@ import { Button } from '../common/Button';
 import { EmptyState } from '../common/EmptyState';
 import { ProductCarousel } from '../sales/ProductCarousel';
 import { ProductComparison } from '../sales/ProductComparison';
+import { RecommendationCard } from '../sales/RecommendationCard';
 import { DiagnosticSteps } from '../support/DiagnosticSteps';
 import { SafetyAlert } from '../support/SafetyAlert';
 import { ServiceConfirmation } from '../support/ServiceConfirmation';
@@ -80,16 +81,28 @@ function RichBlock({
         />
       );
     }
+    const recommendation = block.title.toLocaleLowerCase('es-CO').includes('recomend')
+      ? block.products[0]
+      : undefined;
     return (
-      <ProductCarousel
-        title={block.title}
-        products={block.products}
-        comparisonIds={comparisonIds}
-        onCompare={onCompare}
-        onInterested={(product) => onIntent?.('sales.interested', `Me interesa ${product.name}`)}
-        onSave={onSave}
-        onDetails={(product) => onIntent?.('sales.details', `Quiero conocer más detalles de ${product.name}`)}
-      />
+      <>
+        <ProductCarousel
+          title={block.title}
+          products={block.products}
+          comparisonIds={comparisonIds}
+          onCompare={onCompare}
+          onInterested={(product) => onIntent?.('sales.interested', `Me interesa ${product.name}`)}
+          onSave={onSave}
+          onDetails={(product) => onIntent?.('sales.details', `Quiero conocer más detalles de ${product.name}`)}
+        />
+        {recommendation && (
+          <RecommendationCard
+            product={recommendation}
+            reason="Es el mejor punto de partida dentro de este catálogo demostrativo; aún debemos confirmar espacio, prioridades y datos oficiales."
+            onInterested={(product) => onIntent?.('sales.interested', `Me interesa ${product.name}`)}
+          />
+        )}
+      </>
     );
   }
 

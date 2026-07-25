@@ -224,8 +224,11 @@ const hasDimensions = (dimensions: SpaceDimensions): boolean =>
 const buildSpaceExplorationBlocks = (
   normalizedMessage: string,
   responseId: string,
+  contextCategory?: ProductCategory,
 ): readonly AgentResponseBlock[] => {
-  const category = categoryFromMessage(normalizedMessage);
+  const category =
+    categoryFromMessage(normalizedMessage) ??
+    contextCategory;
   const dimensions = dimensionsFromMessage(normalizedMessage);
 
   if (!category || !hasDimensions(dimensions)) {
@@ -308,10 +311,26 @@ const buildHumanHandoffBlocks = (
 ];
 
 const buildSalesBlocks = (
-  message: string,
+  request: ChatRequest,
   responseId: string,
 ): readonly AgentResponseBlock[] => {
+  const message = request.message;
   const normalizedMessage = normalize(message);
+
+  if (normalizedMessage.includes("recomiend")) {
+    return [
+      textBlock(
+        `${responseId}-text`,
+        "Con la información disponible, esta sería una recomendación inicial de demostración. Para afinarla todavía necesito validar espacio, capacidad y prioridades contigo.",
+      ),
+      {
+        id: `${responseId}-products`,
+        type: "product-list",
+        title: "Recomendación inicial",
+        products: MOCK_PRODUCTS.slice(0, 2),
+      },
+    ];
+  }
 
   if (
     normalizedMessage.includes("sin resultados") ||
@@ -358,7 +377,11 @@ const buildSalesBlocks = (
       "fondo disponible",
     ])
   ) {
-    return buildSpaceExplorationBlocks(normalizedMessage, responseId);
+    return buildSpaceExplorationBlocks(
+      normalizedMessage,
+      responseId,
+      request.productContext.category,
+    );
   }
 
   if (isHumanHandoffIntent(normalizedMessage)) {
@@ -381,7 +404,9 @@ const buildSalesBlocks = (
     ];
   }
 
-  const category = categoryFromMessage(normalizedMessage);
+  const category =
+    categoryFromMessage(normalizedMessage) ??
+    request.productContext.category;
   const products = category
     ? MOCK_PRODUCTS.filter((product) => product.category === category).slice(
         0,
@@ -389,7 +414,13 @@ const buildSalesBlocks = (
       )
     : MOCK_PRODUCTS.slice(0, 3);
   const categoryCopy = category
-    ? "Encontré estas opciones demostrativas para empezar."
+    ? normalizedMessage.includes("persona")
+      ? "Perfecto. Ahora dime cuánto espacio tienes disponible: ancho, alto y fondo aproximados."
+      : /\d+\s*(?:cm|centimetros?)/.test(normalizedMessage)
+        ? "Las medidas ayudan mucho. ¿Prefieres priorizar capacidad, ahorro de energía o diseño?"
+        : normalizedMessage.includes("presupuesto")
+          ? "Entendido. Para cerrar la recomendación, dime qué característica es indispensable para ti."
+          : "Encontré estas opciones demostrativas para empezar. ¿Para cuántas personas sería?"
     : "Te ayudaré a encontrar una opción que se ajuste a tu espacio y a lo que necesitas. Para empezar, ¿qué tipo de electrodoméstico buscas?";
 
   return [
@@ -792,7 +823,7 @@ export const buildMockAgentBlocks = (
   responseId: string,
 ): readonly AgentResponseBlock[] =>
   request.agent === "sales"
-    ? buildSalesBlocks(request.message, responseId)
+    ? buildSalesBlocks(request, responseId)
     : buildSupportBlocks(request, responseId);
 
 let responseSequence = 0;
