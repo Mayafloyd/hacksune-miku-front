@@ -1,0 +1,221 @@
+---
+const actions = [
+  {
+    label: "Comparar productos",
+    detail: "Revisa diferencias clave",
+    href: "/assistant/sales?action=compare",
+    number: "01",
+  },
+  {
+    label: "Consultar garantía",
+    detail: "Valida la cobertura",
+    href: "/assistant/support?action=warranty",
+    number: "02",
+  },
+  {
+    label: "Agendar servicio",
+    detail: "Elige fecha y horario",
+    href: "/assistant/support?action=schedule",
+    number: "03",
+  },
+  {
+    label: "Buscar un repuesto",
+    detail: "Identifica la pieza",
+    href: "/assistant/support?action=parts",
+    number: "04",
+  },
+  {
+    label: "Estado de una solicitud",
+    detail: "Consulta su avance",
+    href: "/assistant/support?action=request-status",
+    number: "05",
+  },
+];
+---
+
+<section class="quick-actions" id="quick-actions" aria-labelledby="quick-title">
+  <div class="quick-actions__inner">
+    <header class="quick-actions__heading">
+      <p>También puedes ir directo a una tarea</p>
+      <h2 id="quick-title">Accesos rápidos</h2>
+    </header>
+
+    <ul class="quick-actions__list">
+      {
+        actions.map((action) => (
+          <li>
+            <a href={action.href}>
+              <span class="quick-actions__number" aria-hidden="true">
+                {action.number}
+              </span>
+              <span class="quick-actions__copy">
+                <strong>{action.label}</strong>
+                <small>{action.detail}</small>
+              </span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .quick-actions {
+    padding: clamp(3rem, 6vw, 5rem) 0;
+    border-top: 1px solid var(--brand-border, #dfe1da);
+    background: var(--brand-white, #ffffff);
+  }
+
+  .quick-actions__inner {
+    display: grid;
+    width: min(100% - 2.5rem, var(--content-wide, 78rem));
+    margin-inline: auto;
+    grid-template-columns: minmax(10rem, 0.72fr) minmax(0, 2fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .quick-actions__heading p {
+    margin: 0 0 0.45rem;
+    color: var(--brand-gray, #6b6b6b);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .quick-actions__heading h2 {
+    margin: 0;
+    color: var(--brand-black, #111111);
+    font-size: clamp(1.75rem, 3vw, 2.7rem);
+    font-weight: 720;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .quick-actions__list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    list-style: none;
+    border-top: 1px solid var(--brand-border, #dfe1da);
+  }
+
+  .quick-actions__list li {
+    min-width: 0;
+    border-bottom: 1px solid var(--brand-border, #dfe1da);
+  }
+
+  .quick-actions__list li:nth-child(odd) {
+    border-right: 1px solid var(--brand-border, #dfe1da);
+  }
+
+  .quick-actions__list a {
+    display: grid;
+    min-height: 5.6rem;
+    padding: 1rem 1.05rem;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.9rem;
+    color: var(--brand-black, #111111);
+    text-decoration: none;
+    transition:
+      background-color var(--motion-fast, 180ms) ease,
+      padding-inline var(--motion-fast, 180ms) ease;
+  }
+
+  .quick-actions__list a:hover {
+    padding-inline: 1.25rem 0.85rem;
+    background: var(--brand-lime-soft, #f0f4c3);
+  }
+
+  .quick-actions__list a:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 3px solid var(--brand-lime, #c9d600);
+    outline-offset: -3px;
+  }
+
+  .quick-actions__number {
+    color: var(--brand-gray, #6b6b6b);
+    font-size: 0.68rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .quick-actions__copy {
+    display: grid;
+    min-width: 0;
+    gap: 0.2rem;
+  }
+
+  .quick-actions__copy strong {
+    font-size: 1rem;
+    font-weight: 720;
+  }
+
+  .quick-actions__copy small {
+    overflow: hidden;
+    color: var(--brand-gray, #6b6b6b);
+    font-size: 0.76rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .quick-actions__list svg {
+    color: var(--brand-graphite, #252525);
+    opacity: 0.5;
+    transform: translateX(-0.25rem);
+    transition:
+      opacity var(--motion-fast, 180ms) ease,
+      transform var(--motion-fast, 180ms) ease;
+  }
+
+  .quick-actions__list a:hover svg {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (max-width: 48rem) {
+    .quick-actions__inner {
+      width: min(100% - 1.5rem, var(--content-wide, 78rem));
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .quick-actions__list {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-actions__list li:nth-child(odd) {
+      border-right: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .quick-actions__list a,
+    .quick-actions__list svg {
+      transition-duration: 1ms;
+    }
+  }
+</style>

@@ -1,0 +1,334 @@
+---
+import { existsSync, statSync } from "node:fs";
+import { join } from "node:path";
+
+import MobileNavigation from "./MobileNavigation";
+
+interface Props {
+  sessionLabel?: string;
+}
+
+const { sessionLabel = "Sesión activa" } = Astro.props;
+const currentPath = Astro.url.pathname;
+const currentSearch = Astro.url.search;
+const navigationItems = [
+  { href: "/assistant/sales", label: "Productos" },
+  { href: "/assistant/support", label: "Servicio técnico" },
+  { href: "/assistant/sales?view=history", label: "Mis conversaciones" },
+  { href: "/assistant/support?topic=help", label: "Ayuda" },
+];
+const isNavigationItemCurrent = (href: string) => {
+  const itemUrl = new URL(href, Astro.url.origin);
+  if (itemUrl.pathname !== currentPath) return false;
+
+  const matchesItemParams = Array.from(itemUrl.searchParams.entries()).every(
+    ([key, value]) => Astro.url.searchParams.get(key) === value,
+  );
+  if (itemUrl.searchParams.size > 0) return matchesItemParams;
+
+  const hasMoreSpecificMatch = navigationItems.some((candidate) => {
+    const candidateUrl = new URL(candidate.href, Astro.url.origin);
+    if (
+      candidateUrl.pathname !== currentPath ||
+      candidateUrl.searchParams.size === 0
+    ) {
+      return false;
+    }
+
+    return Array.from(candidateUrl.searchParams.entries()).every(
+      ([key, value]) => Astro.url.searchParams.get(key) === value,
+    );
+  });
+
+  return !hasMoreSpecificMatch;
+};
+
+const logoCandidates = [
+  "/logo-haceb.svg",
+  "/logo-haceb.png",
+  "/haceb-logo.svg",
+  "/haceb-logo.png",
+  "/haceb-logo.webp",
+  "/logo.svg",
+  "/logo.png",
+  "/logo.webp",
+  "/logo",
+];
+const logoSource = logoCandidates.find((candidate) => {
+  const candidatePath = join(process.cwd(), "public", candidate.slice(1));
+  return existsSync(candidatePath) && statSync(candidatePath).isFile();
+});
+---
+
+<header class="app-header">
+  <div class="app-header__inner">
+    <a class="app-header__brand" href="/" aria-label="Ir al inicio de HACEB">
+      {
+        logoSource ? (
+          <img
+            src={logoSource}
+            alt="HACEB"
+            width="118"
+            height="42"
+            loading="eager"
+            decoding="async"
+          />
+        ) : (
+          <span class="app-header__wordmark" aria-label="HACEB">
+            HACEB
+          </span>
+        )
+      }
+      <span class="app-header__product">Asistencia</span>
+    </a>
+
+    <nav class="app-header__desktop-nav" aria-label="Navegación principal">
+      <ul>
+        {
+          navigationItems.map((item) => {
+            const isCurrent = isNavigationItemCurrent(item.href);
+
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isCurrent ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="app-header__account">
+      <span class="app-header__session">
+        <span aria-hidden="true"></span>
+        {sessionLabel}
+      </span>
+      <button class="app-header__profile" type="button" aria-label="Abrir perfil">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M20 21a8 8 0 0 0-16 0"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </button>
+    </div>
+
+    <MobileNavigation
+      client:load
+      currentPath={currentPath}
+      currentSearch={currentSearch}
+      items={navigationItems}
+    />
+  </div>
+</header>
+
+<style>
+  .app-header {
+    position: relative;
+    z-index: 50;
+    height: var(--header-height, 4.75rem);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--brand-border, #dfe1da) 72%, transparent);
+    background: color-mix(
+      in srgb,
+      var(--brand-white, #ffffff) 92%,
+      transparent
+    );
+    backdrop-filter: blur(14px);
+  }
+
+  .app-header__inner {
+    display: grid;
+    width: min(100% - 2.5rem, var(--content-max, 90rem));
+    height: 100%;
+    margin-inline: auto;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 4.5rem);
+  }
+
+  .app-header__brand {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--brand-black, #111111);
+    text-decoration: none;
+  }
+
+  .app-header__brand img {
+    display: block;
+    width: 7.4rem;
+    height: 2.25rem;
+    object-fit: contain;
+  }
+
+  .app-header__wordmark {
+    display: inline-flex;
+    height: 2.15rem;
+    padding-inline: 0.15rem 0.45rem;
+    align-items: center;
+    border-bottom: 0.34rem solid var(--brand-lime, #c9d600);
+    font-size: 1.14rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+
+  .app-header__product {
+    padding-left: 0.7rem;
+    border-left: 1px solid var(--brand-border, #dfe1da);
+    color: var(--brand-gray, #6b6b6b);
+    font-size: 0.78rem;
+    font-weight: 680;
+    letter-spacing: 0.04em;
+  }
+
+  .app-header__desktop-nav ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.85rem, 2vw, 2rem);
+    list-style: none;
+  }
+
+  .app-header__desktop-nav a {
+    position: relative;
+    display: inline-flex;
+    min-height: 2.75rem;
+    padding: 0.65rem 0.2rem;
+    align-items: center;
+    color: var(--brand-graphite, #252525);
+    font-size: 0.86rem;
+    font-weight: 650;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .app-header__desktop-nav a::after {
+    position: absolute;
+    right: 0;
+    bottom: 0.25rem;
+    left: 0;
+    height: 0.13rem;
+    border-radius: 999px;
+    background: var(--brand-lime, #c9d600);
+    content: "";
+    opacity: 0;
+    transform: scaleX(0.45);
+    transition:
+      opacity var(--motion-fast, 180ms) ease,
+      transform var(--motion-fast, 180ms) ease;
+  }
+
+  .app-header__desktop-nav a:hover::after,
+  .app-header__desktop-nav a[aria-current="page"]::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .app-header__account {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .app-header__session {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--brand-gray, #6b6b6b);
+    font-size: 0.78rem;
+    font-weight: 620;
+    white-space: nowrap;
+  }
+
+  .app-header__session > span {
+    width: 0.47rem;
+    height: 0.47rem;
+    border-radius: 50%;
+    background: var(--brand-success, #287a3d);
+    box-shadow: 0 0 0 0.2rem rgb(40 122 61 / 0.11);
+  }
+
+  .app-header__profile {
+    display: inline-grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    place-items: center;
+    border: 1px solid var(--brand-border, #dfe1da);
+    border-radius: 50%;
+    background: var(--brand-white, #ffffff);
+    color: var(--brand-black, #111111);
+    cursor: pointer;
+    transition:
+      border-color var(--motion-fast, 180ms) ease,
+      background-color var(--motion-fast, 180ms) ease;
+  }
+
+  .app-header__profile:hover {
+    border-color: var(--brand-gray, #6b6b6b);
+    background: var(--brand-surface, #f6f7f2);
+  }
+
+  .app-header__brand:focus-visible,
+  .app-header__desktop-nav a:focus-visible,
+  .app-header__profile:focus-visible {
+    border-radius: 0.4rem;
+    outline: 3px solid var(--brand-lime, #c9d600);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 68rem) {
+    .app-header__session {
+      display: none;
+    }
+
+    .app-header__inner {
+      gap: 1.5rem;
+    }
+
+    .app-header__desktop-nav ul {
+      gap: 0.9rem;
+    }
+  }
+
+  @media (max-width: 52.5rem) {
+    .app-header__inner {
+      width: min(100% - 1.5rem, var(--content-max, 90rem));
+      grid-template-columns: 1fr auto;
+    }
+
+    .app-header__desktop-nav,
+    .app-header__account {
+      display: none;
+    }
+
+    .app-header__product {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-header__desktop-nav a::after,
+    .app-header__profile {
+      transition-duration: 1ms;
+    }
+  }
+</style>

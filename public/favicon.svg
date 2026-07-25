@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>Favicon provisional del asistente</title>
+  <rect width="64" height="64" rx="18" fill="#111111"/>
+  <path d="M32 11 53 32 32 53 11 32Z" fill="#C9D600"/>
+  <path d="M24 21v22h5v-8h6v8h5V21h-5v9h-6v-9Z" fill="#111111"/>
+</svg>

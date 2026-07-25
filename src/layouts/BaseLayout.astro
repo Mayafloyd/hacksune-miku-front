@@ -1,0 +1,60 @@
+---
+import { ClientRouter } from "astro:transitions";
+
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  robots?: string;
+}
+
+const {
+  title = "HACEB | Asistencia para tu hogar",
+  description = "Encuentra el electrodoméstico ideal o recibe acompañamiento técnico para tu producto HACEB.",
+  robots = "index, follow",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#111111" />
+    <meta name="color-scheme" content="light" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Ir al contenido principal</a>
+    <slot />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: fixed;
+    z-index: 1000;
+    top: 0.75rem;
+    left: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0.72rem 1rem;
+    border: 2px solid var(--brand-black, #111111);
+    border-radius: var(--radius-control, 0.75rem);
+    background: var(--brand-lime, #c9d600);
+    color: var(--brand-black, #111111);
+    font-weight: 750;
+    text-decoration: none;
+    transform: translateY(-150%);
+    transition: transform var(--motion-fast, 180ms) ease;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+</style>

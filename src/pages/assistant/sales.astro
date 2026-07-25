@@ -1,0 +1,11 @@
+---
+import ChatWorkspace from '../../components/chat/ChatWorkspace';
+import AssistantLayout from '../../layouts/AssistantLayout.astro';
+---
+
+<AssistantLayout
+  title="Asesor de ventas | HACEB"
+  description="Explora y compara electrodomésticos con acompañamiento conversacional."
+>
+  <ChatWorkspace client:load initialAgent="sales" />
+</AssistantLayout>

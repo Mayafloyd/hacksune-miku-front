@@ -1,0 +1,11 @@
+---
+import ChatWorkspace from '../../components/chat/ChatWorkspace';
+import AssistantLayout from '../../layouts/AssistantLayout.astro';
+---
+
+<AssistantLayout
+  title="Soporte técnico | HACEB"
+  description="Recibe orientación segura sobre tu producto, garantía y servicio técnico."
+>
+  <ChatWorkspace client:load initialAgent="support" />
+</AssistantLayout>

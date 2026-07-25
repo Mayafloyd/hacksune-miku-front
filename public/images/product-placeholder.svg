@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" role="img">
+  <title>Imagen provisional de producto</title>
+  <rect width="520" height="420" rx="32" fill="#F1F2EC"/>
+  <path d="M405 0h115v115L405 0Z" fill="#C9D600" opacity=".9"/>
+  <path d="M0 420V305l115 115H0Z" fill="#DFE1DA"/>
+  <rect x="170" y="56" width="180" height="308" rx="28" fill="#fff" stroke="#CFD1C9" stroke-width="4"/>
+  <path d="M170 176h180" stroke="#CFD1C9" stroke-width="4"/>
+  <rect x="317" y="86" width="6" height="60" rx="3" fill="#252525"/>
+  <rect x="317" y="204" width="6" height="84" rx="3" fill="#252525"/>
+  <circle cx="260" cy="335" r="7" fill="#C9D600"/>
+  <text x="260" y="396" text-anchor="middle" fill="#6B6B6B" font-family="sans-serif" font-size="15" font-weight="700" letter-spacing="2">IMAGEN DEMOSTRATIVA</text>
+</svg>

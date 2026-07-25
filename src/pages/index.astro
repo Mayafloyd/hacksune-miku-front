@@ -1,0 +1,18 @@
+---
+import AppHeader from "../components/layout/AppHeader.astro";
+import Hero from "../components/landing/Hero.astro";
+import QuickActions from "../components/landing/QuickActions.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="HACEB | ¿Cómo podemos ayudarte hoy?"
+  description="Encuentra el producto ideal para tu hogar o recibe orientación técnica, consulta de garantía y ayuda para agendar servicio."
+>
+  <AppHeader />
+
+  <main id="main-content">
+    <Hero />
+    <QuickActions />
+  </main>
+</BaseLayout>
