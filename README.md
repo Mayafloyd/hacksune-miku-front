@@ -74,6 +74,7 @@ Se necesita Node.js 22.12 o posterior, npm y Python 3.11 o posterior.
 npm install
 python3 -m pip install -r requirements.txt
 cp .env.example .env
+cp .env.backend.example .env.backend
 npm run monolith
 ```
 

@@ -109,7 +109,8 @@ export class HttpChatTransport implements ChatTransport {
 
   constructor(options: HttpChatTransportOptions = {}) {
     this.endpoint = options.endpoint ?? CHAT_API_ENDPOINT;
-    this.fetchImplementation = options.fetchImplementation ?? globalThis.fetch;
+    this.fetchImplementation =
+      options.fetchImplementation ?? globalThis.fetch.bind(globalThis);
     this.headers = options.headers ?? {};
   }
 
@@ -135,7 +136,7 @@ export class HttpChatTransport implements ChatTransport {
       );
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
-      console.error("[HACEB] No se pudo conectar con Jota", {
+      console.error("[HACEB] No se pudo conectar con el backend", {
         endpoint: this.endpoint,
         error,
       });
@@ -143,7 +144,7 @@ export class HttpChatTransport implements ChatTransport {
         type: "error",
         code: "offline",
         message:
-          `No pudimos conectar con Jota en ${this.endpoint}. Verifica que la API esté ejecutándose.`,
+          `No pudimos conectar con el asistente en ${this.endpoint}. Verifica que el monolito esté ejecutándose.`,
         retryable: true,
       };
       return;
