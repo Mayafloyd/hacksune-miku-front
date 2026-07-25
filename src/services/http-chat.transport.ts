@@ -135,11 +135,15 @@ export class HttpChatTransport implements ChatTransport {
       );
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
+      console.error("[HACEB] No se pudo conectar con Jota", {
+        endpoint: this.endpoint,
+        error,
+      });
       yield {
         type: "error",
         code: "offline",
         message:
-          "No tienes conexión en este momento. Tu conversación sigue guardada.",
+          `No pudimos conectar con Jota en ${this.endpoint}. Verifica que la API esté ejecutándose.`,
         retryable: true,
       };
       return;

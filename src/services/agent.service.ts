@@ -130,11 +130,11 @@ export const createAgentService = (
   if (options.transport) return new AgentService(options.transport);
 
   const mode = options.mode ?? "mock";
-  const transport =
+  const transport: ChatTransport =
     mode === "http"
       ? new HttpChatTransport({
-          endpoint: CHAT_API_ENDPOINT,
-          ...options.http,
+            endpoint: CHAT_API_ENDPOINT,
+            ...options.http,
         })
       : new MockChatTransport(options.mock);
 

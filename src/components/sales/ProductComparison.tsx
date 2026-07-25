@@ -40,6 +40,7 @@ function fallbackValue(product: Product, key: (typeof fallbackRows)[number]['key
 export function ProductComparison({ products, comparison, onRemove }: ProductComparisonProps) {
   const comparisonId = useId();
   const titleId = `${comparisonId}-title`;
+  const isDemonstration = products.some((product) => product.demo);
 
   if (products.length < 2) {
     return (
@@ -116,7 +117,9 @@ export function ProductComparison({ products, comparison, onRemove }: ProductCom
         </div>
       )}
       <p className="comparison__notice">
-        Comparación demostrativa. Confirma especificaciones, precio y disponibilidad en fuentes oficiales.
+        {isDemonstration
+          ? 'Comparación demostrativa. Confirma especificaciones, precio y disponibilidad en fuentes oficiales.'
+          : 'Datos consultados en el catálogo oficial de Haceb; precio y disponibilidad pueden cambiar.'}
       </p>
     </section>
   );

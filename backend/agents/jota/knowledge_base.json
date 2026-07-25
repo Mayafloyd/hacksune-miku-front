@@ -1,0 +1,237 @@
+{
+  "nombre_agente": "Jota",
+  "empresa": "Haceb",
+  "pais": "Colombia",
+  "moneda": "COP (Pesos colombianos)",
+  "descripcion_empresa": "Haceb es una empresa colombiana con más de 80 años de experiencia en la fabricación de electrodomésticos. Es la marca líder en Colombia en refrigeración, cocción, calentamiento de agua y lavado. Todos los productos tienen garantía oficial Haceb.",
+
+  "info_general": {
+    "cobertura": "Envíos a todo Colombia",
+    "garantia": "Todos los productos cuentan con garantía oficial Haceb (varía según producto, generalmente 1-3 años)",
+    "soporte": "Servicio técnico autorizado Haceb en las principales ciudades de Colombia",
+    "tipo_venta": "B2B - Cotizaciones para empresas, hoteles, restaurantes, constructoras y proyectos empresariales"
+  },
+
+  "categorias": [
+    {
+      "id_categoria": 8,
+      "nombre": "Refrigeración",
+      "tipos_producto": ["Neveras", "Nevecones (tipo americano)", "Congeladores", "Cavas y Minibares"],
+      "descripcion_general": "Línea completa de refrigeración para el hogar y negocios. Desde minibares compactos ideales para hoteles y habitaciones, hasta nevecones de gran capacidad para restaurantes y cocinas industriales. Tecnología No Frost e Inverter disponible en varios modelos.",
+      "usos_tipicos_b2b": [
+        "Hoteles: Minibares para habitaciones",
+        "Restaurantes: Nevecones y congeladores de gran capacidad",
+        "Oficinas: Neveras medianas para áreas de descanso",
+        "Clínicas/Hospitales: Congeladores y neveras especializadas"
+      ],
+      "caracteristicas_clave": [
+        "Tecnología No Frost (sin escarcha)",
+        "Motores Inverter (ahorro energético hasta 40%)",
+        "Clasificación energética A/A+",
+        "Capacidades desde 90L (minibar) hasta 500L+ (nevecón)",
+        "Variedad de colores: blanco, gris, negro inox"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Cuántas unidades necesita?",
+        "¿Qué capacidad en litros requiere? (minibar ~90L, mediana ~250L, grande ~400L+)",
+        "¿Prefiere bajo consumo (Inverter) o mejor precio?",
+        "¿Color preferido?",
+        "¿Tiene restricción de espacio (dimensiones máximas)?"
+      ]
+    },
+    {
+      "id_categoria": 1,
+      "nombre": "Lavadoras y Secadoras",
+      "tipos_producto": ["Lavadoras carga superior", "Lavadoras carga frontal", "Lavadoras-Secadoras (combo)", "Secadoras"],
+      "descripcion_general": "Lavadoras con capacidades desde 13 hasta 33 libras, disponibles en carga superior y carga frontal. Modelos con tecnología Inverter para mayor eficiencia y menor ruido. Las combos lavadora-secadora son ideales para espacios reducidos.",
+      "usos_tipicos_b2b": [
+        "Lavanderías comerciales: Lavadoras de alta capacidad (28-33 lbs)",
+        "Hoteles: Lavadoras y secadoras para lavandería interna",
+        "Edificios residenciales: Lavadoras compactas para zonas comunes",
+        "Hospitales/Clínicas: Lavadoras de alta capacidad"
+      ],
+      "caracteristicas_clave": [
+        "Capacidades: 13 a 33 libras",
+        "Carga superior y carga frontal",
+        "Tecnología Inverter disponible",
+        "Múltiples ciclos de lavado",
+        "Modelos con panel digital"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Cuántas unidades necesita?",
+        "¿Qué capacidad de carga? (uso doméstico ~18lbs, comercial ~28-33lbs)",
+        "¿Prefiere carga superior o frontal?",
+        "¿Necesita también secadora o combo lavadora-secadora?",
+        "¿Requiere tecnología Inverter (menor consumo y ruido)?"
+      ]
+    },
+    {
+      "id_categoria": 18,
+      "nombre": "Cocina",
+      "tipos_producto": ["Estufas y cocinetas", "Estufas de empotrar", "Hornos", "Campanas extractoras", "Mesones de cocina", "Lavaplatos"],
+      "descripcion_general": "Todo para equipar cocinas: desde estufas de mesa de 2 puestos hasta estufas de empotrar de 4-5 puestos. Hornos a gas y eléctricos, campanas extractoras y mesones. Soluciones integrales para cocinas de restaurantes, hoteles y proyectos de construcción.",
+      "usos_tipicos_b2b": [
+        "Restaurantes: Estufas de 4-5 puestos, hornos de alta potencia, campanas industriales",
+        "Hoteles: Equipamiento completo de cocina principal",
+        "Constructoras: Dotación de cocinas en proyectos de vivienda",
+        "Cafeterías: Cocinetas compactas y hornos"
+      ],
+      "caracteristicas_clave": [
+        "Estufas de 1 a 5 puestos",
+        "Gas natural y gas propano",
+        "Encendido eléctrico",
+        "Hornos a gas y eléctricos",
+        "Campanas con diferentes niveles de extracción",
+        "Mesones en acero inoxidable y otros materiales"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Cuántos puestos de cocción necesita?",
+        "¿Gas natural o propano?",
+        "¿Necesita horno? ¿A gas o eléctrico?",
+        "¿Requiere campana extractora?",
+        "¿Es para empotrar o de mesa?"
+      ]
+    },
+    {
+      "id_categoria": 6,
+      "nombre": "Aires Acondicionados",
+      "tipos_producto": ["Aires On-Off (convencionales)", "Aires Inverter (alta eficiencia)", "Purificadores de aire"],
+      "descripcion_general": "Sistemas de climatización split para diferentes espacios. Modelos convencionales (On-Off) y modelos Inverter con ahorro energético de hasta 60%. Disponibles en diferentes capacidades (BTU) para habitaciones, oficinas y espacios comerciales.",
+      "usos_tipicos_b2b": [
+        "Hoteles: Aire acondicionado para cada habitación",
+        "Oficinas: Climatización de espacios de trabajo",
+        "Restaurantes: Climatización del salón",
+        "Centros médicos: Control de temperatura en consultorios"
+      ],
+      "caracteristicas_clave": [
+        "Tipo Split (unidad interior + exterior)",
+        "Capacidades: 9,000 a 24,000 BTU",
+        "Tecnología Inverter (ahorro hasta 60%)",
+        "Modo frío y calor en algunos modelos",
+        "Filtros antibacteriales",
+        "Control remoto incluido",
+        "Clasificación energética A/A+"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Cuántas unidades necesita?",
+        "¿Qué tamaño tienen los espacios a climatizar? (m²)",
+        "¿Prefiere Inverter (mayor ahorro) o convencional (menor costo inicial)?",
+        "¿Necesita función de calefacción también?",
+        "¿Tiene instalación eléctrica de 110V o 220V?"
+      ]
+    },
+    {
+      "id_categoria": 14,
+      "nombre": "Calentadores de Agua",
+      "tipos_producto": ["Calentadores de paso (instantáneos)", "Calentadores de acumulación (tanque)"],
+      "descripcion_general": "Calentadores a gas para agua caliente. Los de paso calientan instantáneamente y son ideales para uso doméstico. Los de acumulación almacenan agua caliente en tanque y son mejores para alto consumo simultáneo en hoteles o edificios.",
+      "usos_tipicos_b2b": [
+        "Hoteles: Calentadores de acumulación para suministro constante",
+        "Edificios residenciales: Calentadores de paso por apartamento",
+        "Restaurantes: Agua caliente para cocina y lavado",
+        "Gimnasios: Calentadores de acumulación para duchas"
+      ],
+      "caracteristicas_clave": [
+        "Gas natural y gas propano",
+        "De paso: Calentamiento instantáneo, compactos",
+        "De acumulación: Tanques de 20 a 80 litros",
+        "Encendido electrónico",
+        "Sistemas de seguridad (sensor de llama, válvula de alivio)"
+      ],
+      "preguntas_para_cotizar": [
+        "¿De paso o de acumulación?",
+        "¿Gas natural o propano?",
+        "¿Cuántos puntos de agua caliente necesita atender simultáneamente?",
+        "¿Para cuántas personas/habitaciones?"
+      ]
+    },
+    {
+      "id_categoria": 26,
+      "nombre": "Pequeños Electrodomésticos",
+      "tipos_producto": ["Microondas", "Máquinas de café y bebidas", "Hornos tostadores", "Planchas", "Freidoras de aire", "Robot aspiradora", "Dispensadores de agua"],
+      "descripcion_general": "Electrodomésticos compactos para complementar espacios. Microondas de diferentes capacidades, freidoras de aire, cafeteras, hornos tostadores y más. Ideales para áreas de descanso en oficinas, habitaciones de hotel y cocinas auxiliares.",
+      "usos_tipicos_b2b": [
+        "Oficinas: Microondas y cafeteras para áreas de descanso",
+        "Hoteles: Cafeteras y planchas para habitaciones",
+        "Restaurantes: Microondas y freidoras de aire como apoyo",
+        "Coworkings: Microondas, dispensadores de agua, cafeteras"
+      ],
+      "caracteristicas_clave": [
+        "Microondas: Desde 0.7 hasta 1.4 pies cúbicos",
+        "Freidoras de aire: Cocina saludable sin aceite",
+        "Cafeteras: Para café molido y cápsulas",
+        "Dispensadores: Agua fría y caliente",
+        "Robot aspiradora: Limpieza automatizada"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Qué tipo de electrodoméstico necesita?",
+        "¿Cuántas unidades?",
+        "¿Para qué espacio o uso?"
+      ]
+    },
+    {
+      "id_categoria": 52,
+      "nombre": "Muebles",
+      "tipos_producto": ["Cocinas integrales", "Alacenas y gabinetes", "Módulos para microondas", "Muebles auxiliares", "Lavaderos", "Bares", "Barras de cocina"],
+      "descripcion_general": "Muebles para equipar cocinas, habitaciones y áreas de lavandería. Cocinas integrales listas para instalar, gabinetes, módulos especializados y muebles auxiliares. Ideales para proyectos de construcción y remodelación.",
+      "usos_tipicos_b2b": [
+        "Constructoras: Dotación de cocinas integrales en proyectos de vivienda",
+        "Hoteles: Muebles para áreas de cocina y lavandería",
+        "Oficinas: Muebles para cocinetas de empleados"
+      ],
+      "caracteristicas_clave": [
+        "Cocinas integrales en diferentes tamaños",
+        "Materiales resistentes a la humedad",
+        "Fácil instalación",
+        "Diseños modernos y funcionales"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Qué tipo de mueble necesita?",
+        "¿Medidas del espacio disponible?",
+        "¿Cuántas unidades para el proyecto?"
+      ]
+    },
+    {
+      "id_categoria": 90,
+      "nombre": "Movilidad Eléctrica (Cargadores para Carros Eléctricos)",
+      "tipos_producto": ["Cargadores de pared para carros eléctricos", "Cargadores portátiles para carros eléctricos"],
+      "descripcion_general": "Soluciones de carga de alta eficiencia para vehículos eléctricos. Cargadores de pared y portátiles compatibles con conectores Tipo Americano (T1), Tipo Europeo (T2) y Tipo Chino (GB/T) en 120V y 220V (potencias de 3.5kW a 7.5kW).",
+      "usos_tipicos_b2b": [
+        "Hoteles y Restaurantes: Puntos de carga para huéspedes y clientes",
+        "Constructoras y Parqueaderos: Infraestructura de carga para proyectos residenciales y comerciales",
+        "Empresas: Flotas vehiculares y parqueaderos corporativos"
+      ],
+      "caracteristicas_clave": [
+        "Potencias de 3.5 kW a 7.5 kW",
+        "Conectores Tipo 1 (T1 Americano), Tipo 2 (T2 Europeo) y GB/T (Chino)",
+        "Opciones portátiles y de pared (Wallbox 220V)",
+        "Garantía oficial Haceb"
+      ],
+      "preguntas_para_cotizar": [
+        "¿Qué tipo de conector requiere el vehículo (T1, T2 o GB/T)?",
+        "¿Requiere cargador portátil o estación de pared (220V)?",
+        "¿Cuántas unidades necesita para su proyecto?"
+      ]
+    }
+  ],
+
+  "productos_no_disponibles": [
+    "Carros y vehículos automotores (Haceb NO vende carros, pero SÍ vende cargadores para carros eléctricos)",
+    "Televisores",
+    "Celulares",
+    "Computadores",
+    "Audio y sonido",
+    "Cámaras",
+    "Herramientas eléctricas de construcción",
+    "Iluminación"
+  ],
+
+  "tips_venta_b2b": [
+    "Si el cliente pregunta por carros o vehículos, aclarar que Haceb no vende carros pero SÍ comercializa cargadores para carros eléctricos",
+    "Para proyectos de más de 10 unidades, mencionar que se puede gestionar precios especiales por volumen",
+    "Destacar siempre el ahorro en consumo energético con tecnología Inverter (especialmente en hoteles y edificios)",
+    "Para hoteles: sugerir paquetes completos por habitación (minibar + aire acondicionado + cafetera)",
+    "Para restaurantes: sugerir equipamiento completo de cocina (estufa + horno + campana + nevecón)",
+    "Para constructoras: mencionar la ventaja de estandarizar con una sola marca (Haceb) para facilitar garantía y servicio técnico"
+  ]
+}

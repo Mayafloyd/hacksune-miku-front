@@ -7,7 +7,9 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "start": "python3 -m uvicorn backend.app:app --host 0.0.0.0 --port 8000",
+    "monolith": "npm run build && npm run start"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.1",

@@ -6,8 +6,9 @@ Prototipo web de una experiencia conversacional con dos recorridos:
 - **Soporte:** diagnóstico guiado, seguridad, garantía y solicitud de servicio.
 
 “HACEB Asistente” es un nombre provisional y no debe interpretarse como una
-denominación oficial. La aplicación usa exclusivamente datos demostrativos: no
-consulta precios, inventario, garantías, citas ni solicitudes reales.
+denominación oficial. En modo mock la aplicación usa datos demostrativos; con
+Jota habilitado, ventas consulta precios, inventario, imágenes y referencias
+desde el catálogo VTEX de Haceb.
 
 ## Estado y alcance
 
@@ -18,18 +19,20 @@ El proyecto implementa:
 - historial, contexto y comparación adaptados como paneles en pantallas
   pequeñas;
 - conversaciones separadas en memoria para cada agente;
-- respuestas progresivas simuladas mediante un contrato de streaming;
+- respuestas estructuradas mediante un contrato compartido (mock local o API
+  real de Jota);
 - bloques enriquecidos para productos, comparaciones, diagnósticos, alertas de
   seguridad, garantías, formularios, citas y transferencia a una persona;
-- historial, catálogo y casos técnicos de demostración;
+- historial, catálogo y casos técnicos de demostración para soporte;
 - descarga de un resumen en texto y uso de la API nativa de compartir cuando
   está disponible;
 - validación local de adjuntos JPG, PNG, WEBP y PDF de hasta 10 MB.
 
-No hay autenticación, persistencia, carga real de archivos, conexión con
-catálogo, CRM, garantías, agenda ni agente de IA. El perfil, el micrófono, el
-traspaso a una persona y las operaciones comerciales/técnicas son demostrativos
-o preparatorios.
+La ruta de ventas puede consumirse desde el agente Jota en
+`/home/camilosanchez/Documentos/hacksune_miku/hacksune-miku/Jota`. La conexión
+real requiere configurar las credenciales del agente y del catálogo en su
+backend; soporte, CRM, garantías, agenda y carga real de archivos siguen siendo
+preparaciones o demostraciones.
 
 ## Rutas
 
@@ -76,6 +79,22 @@ npm install
 cp .env.example .env
 npm run dev
 ```
+
+Para conectar Jota en desarrollo, inicia primero su API (`uvicorn api:app
+--reload --port 8000` desde la carpeta `Jota`) y cambia el `.env` del frontend:
+
+```dotenv
+PUBLIC_AGENT_API_URL=http://localhost:8000
+PUBLIC_USE_MOCK_AGENTS=false
+```
+
+Jota expone `POST /api/chat` y mantiene `/chat` como alias compatible. El
+request usa `agent`, `sessionId`, `message`, `productContext` y `attachments`;
+la respuesta devuelve `id`, `sessionId`, `createdAt` y bloques `text` y
+`product-list`. Los productos incluyen precio/disponibilidad del catálogo VTEX
+de Haceb, imagen, referencia, categoría y URL de origen. Configura
+`CORS_ORIGINS=http://localhost:4321` en `Jota/.env` si el frontend corre en el
+puerto por defecto.
 
 Con un `package-lock.json` ya verificado, `npm ci` es una alternativa
 reproducible para integración continua.
