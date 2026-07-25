@@ -16,6 +16,7 @@ interface AgentChoiceCardProps {
   cta: string;
   href: string;
   labels: string[];
+  portrait?: string;
 }
 
 export default function AgentChoiceCard({
@@ -26,6 +27,7 @@ export default function AgentChoiceCard({
   cta,
   href,
   labels,
+  portrait,
 }: AgentChoiceCardProps) {
   const cardRef = useRef<HTMLElement>(null);
   const titleId = `agent-card-${kind}-title`;
@@ -59,11 +61,24 @@ export default function AgentChoiceCard({
   return (
     <article
       ref={cardRef}
-      className={`hac-agent-card hac-agent-card--${kind}`}
+      className={`hac-agent-card hac-agent-card--${kind}${
+        portrait ? " hac-agent-card--has-portrait" : ""
+      }`}
       aria-labelledby={titleId}
       onPointerMove={handlePointerMove}
       onPointerLeave={resetPointerPosition}
     >
+      {portrait ? (
+        <img
+          className="hac-agent-card__portrait"
+          src={portrait}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : null}
+
       <a
         className="hac-agent-card__link"
         href={href}
@@ -183,6 +198,35 @@ const agentChoiceCardStyles = `
   .hac-agent-card__link:focus-visible {
     outline: 3px solid var(--brand-lime, #c9d600);
     outline-offset: -5px;
+  }
+
+  .hac-agent-card__portrait {
+    position: absolute;
+    z-index: 0;
+    right: -0.75rem;
+    bottom: -0.5rem;
+    width: clamp(9.5rem, 42%, 14.5rem);
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 1.1rem 1.5rem rgb(17 17 17 / 0.22));
+    transform: translate3d(0, 0, 0);
+    transition: transform var(--motion-standard, 240ms)
+      cubic-bezier(0.2, 0.75, 0.25, 1);
+    will-change: transform;
+  }
+
+  .hac-agent-card:hover .hac-agent-card__portrait {
+    transform: translate3d(0, -0.5rem, 0) scale(1.025);
+  }
+
+  .hac-agent-card--has-portrait .hac-agent-card__content,
+  .hac-agent-card--has-portrait .hac-agent-card__tags {
+    padding-right: clamp(6.5rem, 34%, 9.5rem);
+  }
+
+  .hac-agent-card--has-portrait .hac-agent-card__copy {
+    max-width: 26ch;
   }
 
   .hac-agent-card__glow {
@@ -399,6 +443,15 @@ const agentChoiceCardStyles = `
     .hac-agent-card__tags {
       margin-top: 1rem;
     }
+
+    .hac-agent-card__portrait {
+      width: clamp(8.5rem, 38%, 11rem);
+    }
+
+    .hac-agent-card--has-portrait .hac-agent-card__content,
+    .hac-agent-card--has-portrait .hac-agent-card__tags {
+      padding-right: clamp(5rem, 30%, 7rem);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -406,6 +459,7 @@ const agentChoiceCardStyles = `
     .hac-agent-card__glow,
     .hac-agent-card__icon-stage,
     .hac-agent-card__icon,
+    .hac-agent-card__portrait,
     .hac-agent-card__arrow {
       transition-duration: 1ms;
     }

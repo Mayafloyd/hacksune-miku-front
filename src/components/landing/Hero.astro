@@ -1,5 +1,7 @@
 ---
 import AgentChoiceCard from "./AgentChoiceCard";
+import jota from "../../assets/jota_bc.png";
+import mara from "../../assets/mara_bc.png";
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -32,6 +34,7 @@ import AgentChoiceCard from "./AgentChoiceCard";
           description="Cuéntanos qué necesitas y encontraremos opciones adecuadas para tu hogar."
           cta="Hablar con ventas"
           href="/assistant/sales"
+          portrait={jota.src}
           labels={[
             "Recomendaciones",
             "Comparaciones",
@@ -50,6 +53,7 @@ import AgentChoiceCard from "./AgentChoiceCard";
           description="Recibe orientación, consulta tu garantía o agenda una visita técnica."
           cta="Hablar con soporte"
           href="/assistant/support"
+          portrait={mara.src}
           labels={["Diagnóstico", "Garantía", "Repuestos", "Visita técnica"]}
         />
       </div>
